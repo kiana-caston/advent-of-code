@@ -3,7 +3,7 @@ use std::io::prelude::*;
 use std::fs::File;
 
 fn main() -> io::Result<()> {
-    let file = File::open("example_input.txt")?;
+    let file = File::open("input.txt")?;
     let br = BufReader::new(file);
 
     let mut numbers = Vec::new();
@@ -37,8 +37,6 @@ fn main() -> io::Result<()> {
     let mut j = 0;
     let mut k = 0;
 
-    let mut win = false;
-
     while call < numbers.len() {
         while i < boards.len() {
             let board = boards[i].clone();
@@ -51,13 +49,6 @@ fn main() -> io::Result<()> {
 
                     if numbers[call] == x {
                         boards[i][j][k] = "x".to_string();
-                          if call > 3 {
-                              win = check_win(&boards[i]);
-                          }
-
-                          if win {
-                              break;
-                          }
                     }
                     k = k + 1;
                 }
@@ -66,17 +57,16 @@ fn main() -> io::Result<()> {
                 j = j + 1;
             }
 
-            if win {
-                break;
-            }
-
             k = 0;
             j = 0;
             i = i + 1;
         }
 
-        if win {
+
+        if boards.len() == 1 && check_win(&boards[0]){
             break;
+        } else {
+            boards.retain(|board| !check_win(&board));
         }
 
         call = call + 1;
@@ -85,10 +75,10 @@ fn main() -> io::Result<()> {
         k = 0;
     }
 
-    let score = score_board(&boards[i]);
+    let score = score_board(&boards[0]);
     let answer = score * numbers[call].parse::<i32>().unwrap();
 
-    println!("answer part 1: {}", answer);
+    println!("answer: {}", answer);
 
     Ok(())
 }
@@ -114,7 +104,7 @@ fn check_win(board: &Vec<Vec<String>>) -> bool {
         } else {
             j = 0;
             i = i + 1;
-            col = 0;
+            col = col + 1;
         }
     }
 
@@ -125,8 +115,6 @@ fn score_board(board: &Vec<Vec<String>>) -> i32 {
     let mut score = 0;
 
     for row in board.clone() {
-        let x = row.clone();
-
         for x in row {
             if x != "x" {
                 score = score + x.parse::<i32>().unwrap();
