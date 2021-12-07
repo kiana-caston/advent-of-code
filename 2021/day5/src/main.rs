@@ -22,41 +22,26 @@ fn main() -> io::Result<()> {
         let x2 = p2[0].parse::<usize>().unwrap();
         let y2 = p2[1].parse::<usize>().unwrap();
 
-        if x1 == x2 {
-            if y1 < y2 {
-                let mut i = y1;
+        let mut i = x1;
+        let mut j = y1;
 
-                while i <= y2 {
-                    map[i][x1] = map[i][x1] + 1;
+        while true {
+            map[j][i] = map[j][i] + 1;
 
-                    i = i + 1;
-                }
-            } else {
-                let mut i = y2;
-
-                while i <= y1 {
-                    map[i][x1] = map[i][x1] + 1;
-
-                    i = i + 1;
-                }
+            if i == x2 && j == y2 {
+                break;
             }
-        } else if y1 == y2 {
+
             if x1 < x2 {
-                let mut i = x1;
+                i = i + 1;
+            } else if x1 > x2 {
+                i = i - 1;
+            }
 
-                while i <= x2 {
-                    map[y1][i] = map[y1][i] + 1;
-
-                    i = i + 1;
-                }
-            } else {
-                let mut i = x2;
-
-                while i <= x1 {
-                    map[y1][i] = map[y1][i] + 1;
-
-                    i = i + 1;
-                }
+            if y1 < y2 {
+                j = j + 1
+            } else if y1 > y2 {
+                j = j - 1;
             }
         }
     }
@@ -71,7 +56,6 @@ fn main() -> io::Result<()> {
         }
     }
 
-    // println!("map: {:?}", map);
     println!("answer: {}", count);
 
     Ok(())
